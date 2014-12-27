@@ -23,6 +23,14 @@ Usage
 	  Args:                       Arguments to pass to command
 
 
+Releases
+--------
+
+Stable releases are available for all Go-supported architectures on the
+[GitHub releases](https://github.com/zoni/runif/releases) page.
+All releases are signed with my GPG key as published on [keybase](https://keybase.io/nickgroenen).
+
+
 Example
 -------
 

@@ -31,12 +31,12 @@ endif
 	git push --tags
 	docker run --rm --volume $(shell pwd):/build-source \
 		--env-file .github-release --env GITHUB_RELEASE_TAG="$(TAG)" \
-		--env GITHUB_RELEASE_NAME="runif $(TAG)" \
+		--env GITHUB_RELEASE_NAME="$(TAG)" \
 		--env GITHUB_RELEASE_DESCRIPTION="runif version $(TAG)" \
 		$(DOCKERIMAGE) /build-source/github-release.sh
 
 rmsigs:
 	rm --force build-area/*.asc
 
-sign: chown build-area/runif-*
-	for file in $^; do gpg --output "$$file.asc" --detach-sign "$$file"; done
+sign: chown rmsigs
+	cd build-area && for file in runif-*; do gpg --output "$$file.asc" --detach-sign "$$file"; done

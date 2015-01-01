@@ -23,14 +23,19 @@ import (
 	"github.com/jessevdk/go-flags"
 	"os"
 	"os/exec"
+	"path"
+	"runtime"
 	"strings"
 	"syscall"
 	"time"
 )
 
+const VERSION = "1.0.1"
+
 var opts struct {
-	DelayExit     int  `short:"d" long:"delay-exit" default:"0" value-name:"SECONDS" description:"Delay program exit by this many seconds when command does not get run"`
-	ExitWithError bool `short:"e" long:"exit-with-error" default:"false" description:"Exit with non-zero exit status when Key is unset or false"`
+	DelayExit     int    `short:"d" long:"delay-exit" default:"0" value-name:"SECONDS" description:"Delay program exit by this many seconds when command does not get run"`
+	ExitWithError bool   `short:"e" long:"exit-with-error" default:"false" description:"Exit with non-zero exit status when Key is unset or false"`
+	Version       func() `short:"v" long:"version" description:"Display version information"`
 
 	Positional struct {
 		Key     string   `description:"The name of the environment variable that must be true in order for command to be run"`
@@ -81,6 +86,16 @@ func ExecCommand(command string, args []string) {
 func IsTruthy(s string) bool {
 	upper := strings.ToUpper(s)
 	return (upper == "YES" || upper == "TRUE" || upper == "1")
+}
+
+func init() {
+	opts.Version = func() {
+		fmt.Printf(
+			"%s version %s (compiled with %s for %s/%s)\n",
+			path.Base(os.Args[0]), VERSION, runtime.Version(), runtime.GOOS, runtime.GOARCH,
+		)
+		os.Exit(0)
+	}
 }
 
 func main() {
